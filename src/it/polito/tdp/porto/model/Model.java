@@ -4,15 +4,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.event.ConnectedComponentTraversalEvent;
+import org.jgrapht.event.EdgeTraversalEvent;
+import org.jgrapht.event.TraversalListener;
+import org.jgrapht.event.VertexTraversalEvent;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import it.polito.tdp.porto.db.PortoDAO;
 
 public class Model {
+	private class EdgeTraversedGraphListener implements TraversalListener<Author, DefaultEdge> {
+
+		@Override
+		public void connectedComponentFinished(ConnectedComponentTraversalEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void connectedComponentStarted(ConnectedComponentTraversalEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void edgeTraversed(EdgeTraversalEvent<DefaultEdge> arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void vertexFinished(VertexTraversalEvent<Author> arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void vertexTraversed(VertexTraversalEvent<Author> arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	
+		
+	}
+	
 PortoDAO dao;
 List<Author> tuttiautori;
+List<Author> cammino;
 Graph<Author,DefaultEdge> grafo;
 
 	
@@ -21,6 +64,7 @@ public Model() {
 	this.dao = new PortoDAO();
 	this.tuttiautori = new ArrayList<Author>();
 	this.grafo = new SimpleGraph<>(DefaultEdge.class);
+	cammino=new ArrayList<Author>();
 }
 
 
@@ -62,6 +106,24 @@ public List<Author> getautorinoncollegati(Author a) {
 	}
 	autoririmasti.remove(a);
 	return autoririmasti;
+}
+public List<Paper> trovaCamminoMinimo(Author partenza, Author arrivo) {
+	DijkstraShortestPath<Author, DefaultEdge> dijstra = new DijkstraShortestPath<>(this.grafo) ;
+	GraphPath<Author, DefaultEdge> path = dijstra.getPath(partenza, arrivo) ;
+	cammino=path.getVertexList();
+	List<Paper> listaart=new ArrayList<Paper>();
+	for(int i=0;i<cammino.size();i++)
+	{ if((i+1)==cammino.size()) {}
+	else {
+		Paper p=dao.getPaper(cammino.get(i),cammino.get(i+1));
+		listaart.add(p);
+	}
+		
+	}
+	
+	
+	
+	return listaart ;
 }
 
 }

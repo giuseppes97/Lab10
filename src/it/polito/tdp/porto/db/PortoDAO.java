@@ -131,4 +131,34 @@ public class PortoDAO {
 	
 	}
 
+	public Paper getPaper(Author author, Author author2) {
+		final String sql = "SELECT p.eprintid,p.title,p.issn,p.publication,p.type,p.types " + 
+				"FROM paper AS p, creator AS c1, creator AS c2 " + 
+				"WHERE p.eprintid=c1.eprintid AND c1.eprintid=c2.eprintid AND c1.authorid=?  AND c2.authorid=?";
+
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, author.getId());
+			st.setInt(2, author2.getId());
+			
+
+			ResultSet rs = st.executeQuery();
+           Paper p;
+			if (rs.next()) {
+				p=new Paper(rs.getInt("p.eprintid"),rs.getString("p.title"),rs.getString("p.issn"),rs.getString("p.publication"),rs.getString("p.type"),rs.getString("p.types"));
+               conn.close();
+				return p;
+				
+			}
+
+			
+
+		} catch (SQLException e) {
+			
+			throw new RuntimeException("Errore Db");
+		}
+		return null;
+	}
+
 }

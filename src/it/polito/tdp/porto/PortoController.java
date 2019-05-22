@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import it.polito.tdp.porto.db.PortoDAO;
 import it.polito.tdp.porto.model.Author;
 import it.polito.tdp.porto.model.Model;
+import it.polito.tdp.porto.model.Paper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -47,7 +48,12 @@ public class PortoController {
 
     @FXML
     void handleSequenza(ActionEvent event) {
-
+    List<Paper> collegamenti=new ArrayList<Paper>();
+    collegamenti=model.trovaCamminoMinimo(boxPrimo.getValue(), boxSecondo.getValue());
+    txtResult.appendText("\n\nIl cammino e': \n");
+    for(Paper p:collegamenti) {
+    	txtResult.appendText(""+p+"\n");
+    }
     }
 
     @FXML
